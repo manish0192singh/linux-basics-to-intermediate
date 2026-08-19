@@ -1,0 +1,30 @@
+# Kernel 
+-The kernel is the core component of an operating system that acts as a bridge between applications and hardware. It manages system resources such as the
+CPU, memory, storage, devices, and network.
+
+# Key roles of the kernel
+1.Process Management 
+ - Creates, schedules, and terminates processes.
+ - Allocates CPU time to processes.
+
+2.Memory Management
+ -Manages RAM and virtual memory.
+ -Allocates and frees memory for processes.
+
+3.File System Management
+ -Manages access to files, directories, and storage.
+ -Supports filesystems such as ext4, XFS, and Btrfs.
+
+4.Device Management
+ -Communicates with hardware through device drivers.
+ -Manages devices such as disks, keyboards, and network cards.
+
+5.Network Management
+ -Handles networking functions such as TCP/IP, network interfaces, and routing.
+
+6.Security & Access Control
+ -Enforces permissions and isolates processes.
+ -Controls access to system resources.
+
+7.System Calls
+ -Provides an interface through which applications request services from the kernel.
