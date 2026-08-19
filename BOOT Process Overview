@@ -1,0 +1,35 @@
+# Linux Boot Process — 7 Steps
+
+Starting from power-on → login screen:
+
+1. Power On
+- The computer is powered on and the CPU starts executing instructions from the firmware.
+
+2. BIOS/UEFI
+- BIOS/UEFI performs POST (Power-On Self-Test) and initializes basic hardware such as RAM, CPU, and storage.
+
+3. Bootloader
+- BIOS/UEFI finds and loads the bootloader (commonly GRUB in Linux).
+- GRUB lets you select the operating system/kernel and loads the Linux kernel.
+
+4. Linux Kernel Loads
+- The kernel is loaded into RAM and begins managing:
+ CPU
+ Memory
+ Hardware
+ Devices
+ Filesystems
+
+5. initramfs Loads
+- The temporary initial RAM filesystem (initramfs) provides the drivers and tools needed to find and mount the actual root filesystem.
+
+6. systemd Starts
+- The kernel starts the first userspace process, usually:
+
+systemd (PID 1)
+- systemd starts required services such as networking, logging, and other system services.
+
+7. Login Screen
+- The display/login manager starts and presents the graphical login screen.
+
+You enter your username and password → Linux starts your user session.
