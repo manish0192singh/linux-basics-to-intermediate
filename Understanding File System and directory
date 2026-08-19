@@ -1,0 +1,69 @@
+------------------------------FILE SYSTEM------------------------------------------------------
+| File System is the way an operating system organizes and stores files on a storage device.   |
+| - windows uses ntfs                                                                          |
+| - linux uses ext4                                                                            |
+| - XFS are common on some enterprise Linux systems                                            |
+| - FAT32/exFAT — commonly used for removable drives                                           |
+-----------------------------------------------------------------------------------------------                                          
+
+
+---------------------------Linux Directory Structure---------------------------------------------------------------------------------------------------------|
+|                                                                                                                                                            |
+|  # Linux has one main root directory, represented by: /                                                                                                    |
+|                                                                                                                                                            |
+|    Everything starts from /.                                                                                                                               |
+|    A simplified structure: Some Key Structure                                                                                                              |
+|                     /                                                                                                                                      |
+|                      ├── bin   (accessable to all users) contains important binariies file for bootup,programs and to run commands like cd, ls, pwd etc    |
+|                      ├── boot  Files needed for booting                                                                                                    | 
+|                      ├── dev   Device files                                                                                                                | 
+|                      ├── etc   System/application configuration                                                                                            |
+|                      ├── home  Normal users' home directories                                                                                              |
+|                      ├── opt   Optional/third-party software, executables                                                                                  |
+|                      ├── proc  Information about running processes/kernel                                                                                  |  
+|                      ├── root  Root user's home directory                                                                                                  |
+|                      ├── sbin  Many system administration commands                                                                                         |
+|                      ├── sys  Kernel/device information                                                                                                    |  
+|                      ├── tmp   Temporary files                                                                                                             |
+|                      └── var   contains variable data such as logs of sys and application                                                                  |
+|                                                                                                                                                            |
+|                                                                                                                                                            |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+
+QUESTION 1 - SUPPOSE U INSTALLED GOOGLE CHROME THIRD PARTY SOFTWARE MANUALLY TELL ME FILE SYSTEM HEIERARCHY OF FILE. 
+           - what directory contains chrome configuration files ?
+           - what directory contains executabe and resourses ?
+           - what directory contains command to launch chrome ?
+           - what directory contains chrome cache files ?
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+QUESTION 2 - WHAT ABOUT APPLICATION THAT COME WITH LINUX EG VIM
+           - where does vim executable files store?
+           - In which dir VIM configuratioin files is ?
+           - what dir contains man pages of VIM ?
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+--------------------------------------FILE SYSTEM TYPES AND MOUNT POINTS-------------------------------------------------------
+|                                                                                                                              |
+| Filesystem   | Common use             | Example mount point                      | Key thing to know                         |
+| ------------ | ---------------------- | ---------------------------------------- | ----------------------------------------- |
+| **ext4**     | Linux general-purpose  | `/`, `/home`, `/var`                     | Very common Linux filesystem              |
+| **XFS**      | Linux servers          | `/`, `/home`, `/var`                     | Common in enterprise/RHEL systems         |
+| **Btrfs**    | Linux                  | `/`, `/home`                             | Snapshots & subvolumes                    |
+| **ZFS**      | Servers/storage        | `/`, `/home`, `/data`                    | Advanced storage & snapshots              |
+| **NTFS**     | Windows                | `C:` in Windows; `/mnt/windows` in Linux | Main Windows filesystem                   |
+| **FAT32**    | USB/removable media    | `/media/user/USB`                        | Very compatible; 4 GB max file size       |
+| **exFAT**    | USB/SD/removable media | `/media/user/USB`                        | Good for large files & cross-platform use |
+| **ISO 9660** | CDs/DVDs               | `/media/user/CD`                         | Optical-disc filesystem                   |
+|______________________________________________________________________________________________________________________________|
+
+
+
+
+
+
+
