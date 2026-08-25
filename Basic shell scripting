@@ -1,0 +1,403 @@
+--------------------------------------------------Basic Shell Scripting---------------------------------------------------------------------------------------------
+
+# Shell scripting allows you to automate Linux commands and tasks using a script file.
+
+For Linux, the most common shell is Bash.
+
+1. Create a Shell Script
+
+Create a file:
+nano script.sh
+
+Basic script:
+#!/bin/bash
+
+echo "Hello World"
+
+The first line is called the shebang:
+#!/bin/bash
+It tells Linux to use Bash to execute the script.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Make the Script Executable
+chmod +x script.sh
+
+Run it:
+./script.sh
+
+You can also run it with Bash directly:
+bash script.sh
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Comments
+
+Comments start with #.
+#!/bin/bash
+
+# This is a comment
+echo "Hello"
+Comments are ignored when the script runs.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. Variables
+
+Create a variable:
+name="Madhav"
+
+Use the variable:
+echo "$name"
+
+Example:
+------------------------------------------------------
+#!/bin/bash                                          |
+                                                     |
+name="Madhav"                                        |
+age=21                                               | 
+                                                     |
+echo "Name: $name"                                   |
+echo "Age: $age"                                     |
+-----------------------------------------------------|
+
+Important                                            
+There should be no spaces around =:                  
+
+name="Madhav"
+Correct.
+
+name = "Madhav"
+Incorrect.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. User Input
+
+Use read:
+
+#!/bin/bash
+
+echo "Enter your name:"
+read name
+
+echo "Hello $name"
+
+A shorter version:
+
+read -p "Enter your name: " name
+echo "Hello $name"
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Command Substitution
+
+You can store the output of a command in a variable.
+
+hostname=$(hostname)
+
+Example:
+
+#!/bin/bash
+
+user=$(whoami)
+kernel=$(uname -r)
+
+echo "User: $user"
+echo "Kernel: $kernel"
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. If Statements
+
+Basic syntax:
+
+if [ condition ]; then
+    commands
+fi
+
+Example:
+
+#!/bin/bash
+
+age=21
+
+if [ "$age" -ge 18 ]; then
+    echo "Adult"
+fi
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. If / Else
+------------------------------------
+#!/bin/bash                        |
+                                   |
+age=16                             |
+                                   |
+if [ "$age" -ge 18 ]; then         |
+    echo "Adult"                   |
+else                               |
+    echo "Minor"                   |
+fi                                 |
+-----------------------------------|
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. If / Elif / Else
+-------------------------------------------
+#!/bin/bash                                |
+                                           |
+marks=75                                   |
+                                           |
+if [ "$marks" -ge 90 ]; then               |
+    echo "Grade A"                         |
+elif [ "$marks" -ge 60 ]; then             |
+    echo "Grade B"                         |
+else                                       |
+    echo "Grade C"                         |
+fi                                         |
+-------------------------------------------|
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+10. Important Comparison Operators         
+Numbers
+-eq    Equal
+-ne    Not equal
+-gt    Greater than
+-ge    Greater than or equal
+-lt    Less than
+-le    Less than or equal
+
+Example:
+
+if [ "$age" -ge 18 ]; then
+    echo "Adult"
+fi
+Strings
+=      Equal
+!=     Not equal
+-z     String is empty
+-n     String is not empty
+
+Example:
+
+if [ "$name" = "Madhav" ]; then
+    echo "User found"
+fi
+11. File Tests
+
+Shell scripts can check files and directories.
+
+-f    Regular file exists
+-d    Directory exists
+-e    File/directory exists
+-r    Readable
+-w    Writable
+-x    Executable
+
+Example:
+
+if [ -f "/etc/passwd" ]; then
+    echo "File exists"
+fi
+
+Directory:
+
+if [ -d "/home/madhav" ]; then
+    echo "Directory exists"
+fi
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+12. For Loop
+
+Basic loop:
+
+#!/bin/bash
+
+for i in 1 2 3 4 5
+do
+    echo "$i"
+done
+
+Output:
+
+1
+2
+3
+4
+5
+
+Using a range:
+
+for i in {1..10}
+do
+    echo "$i"
+done
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+13. While Loop
+#!/bin/bash
+
+count=1
+
+while [ "$count" -le 5 ]
+do
+    echo "$count"
+    ((count++))
+done
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+14. Functions
+
+Create a function:
+
+#!/bin/bash
+
+hello() {
+    echo "Hello World"
+}
+
+hello
+
+Function with an argument:
+
+#!/bin/bash
+
+greet() {
+    echo "Hello $1"
+}
+
+greet "Madhav"
+
+$1 represents the first argument passed to the function.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+15. Script Arguments
+
+You can pass arguments when running a script.
+
+Script:
+
+#!/bin/bash
+
+echo "First argument: $1"
+echo "Second argument: $2"
+
+Run:
+./script.sh hello world
+
+Output:
+First argument: hello
+Second argument: world
+
+Important variables:
+
+$0    Script name
+$1    First argument
+$2    Second argument
+$#    Number of arguments
+$@    All arguments
+$?    Exit status of previous command
+16. Exit Status
+
+Linux commands return an exit status.
+
+echo $?
+
+Usually:
+
+0     → Success
+non-zero → Error/failure
+
+Example:
+
+ls /home
+echo $?
+
+If successful:
+
+0
+
+You can use this in scripts:
+
+if [ "$?" -eq 0 ]; then
+    echo "Command successful"
+else
+    echo "Command failed"
+fi
+
+A cleaner approach is:
+
+if ls /home > /dev/null 2>&1; then
+    echo "Command successful"
+else
+    echo "Command failed"
+fi
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+17. Logical Operators
+AND
+
+if [ "$age" -ge 18 ] && [ "$age" -le 60 ]; then
+    echo "Valid age"
+fi
+
+OR
+
+if [ "$user" = "root" ] || [ "$user" = "madhav" ]; then
+    echo "Authorized user"
+fi
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+18. Practical Example: System Information Script
+------------------------------------------------
+#!/bin/bash                                     |
+                                                |
+echo "===== System Information ====="           |  
+                                                |
+echo "User: $(whoami)"                          |
+echo "Hostname: $(hostname)"                    |
+echo "Kernel: $(uname -r)"                      |
+                                                |
+echo                                            |
+echo "===== CPU ====="                          |
+lscpu | grep "Model name"                       |
+                                                |
+echo                                            |
+echo "===== Memory ====="                       |
+free -h                                         |
+                                                |
+echo                                            |
+echo "===== Disk ====="                         |
+df -h                                           |
+------------------------------------------------|
+
+Run:
+chmod +x system_info.sh
+./system_info.sh
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+19. Practical Cybersecurity Example
+
+A simple script to check whether common security tools are installed:
+---------------------------------------------------------
+#!/bin/bash                                              |
+                                                         |
+tools=("nmap" "wireshark" "tcpdump" "curl")              |
+                                                         |
+for tool in "${tools[@]}"                                |
+do                                                       |
+    if command -v "$tool" > /dev/null 2>&1; then         |
+        echo "[+] $tool is installed"                    |
+    else                                                 |
+        echo "[-] $tool is not installed"                |
+    fi                                                   |
+done                                                     |
+---------------------------------------------------------|
