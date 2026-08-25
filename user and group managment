@@ -1,0 +1,263 @@
+------------------------------------Linux User and Group Management------------------------------------------------------------------------------------------------
+
+# Linux uses users and groups to control access to files, directories, and system resources.
+
+User
+ |
+ +-- Primary Group
+ |
+ +-- Secondary Groups
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Creating a User
+
+Create a user
+sudo useradd username
+
+Example:
+sudo useradd madhav
+
+Create a user with a home directory
+sudo useradd -m madhav
+
+This creates:
+/home/madhav
+
+Create a user with a specific shell
+sudo useradd -m -s /bin/bash madhav
+
+Set a password
+sudo passwd madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Check User Information
+
+Check the current user
+whoami
+
+Check user ID and groups
+id madhav
+
+Example:
+uid=1001(madhav) gid=1001(madhav) groups=1001(madhav)
+
+Check information about the current user
+id
+
+List logged-in users
+who
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Managing Users
+
+Change a user's password
+sudo passwd madhav
+
+Change user information
+sudo usermod [options] username
+
+Example: change the user's shell:
+sudo usermod -s /bin/bash madhav
+
+Example: change the home directory:
+sudo usermod -d /home/newhome madhav
+
+Lock a user
+sudo passwd -l madhav
+
+or:
+
+sudo usermod -L madhav
+Unlock a user
+sudo passwd -u madhav
+or:
+sudo usermod -U madhav
+
+Delete a user
+sudo userdel madhav
+
+Delete user and home directory
+sudo userdel -r madhav
+⚠️ userdel -r deletes the user's home directory and its contents.
+
+4. Important User Files
+
+Linux stores user information in:
+/etc/passwd
+/etc/shadow
+/etc/group
+
+View users:
+
+cat /etc/passwd
+
+View your own entry:
+grep madhav /etc/passwd
+
+Check password information:
+sudo cat /etc/shadow
+/etc/shadow contains password hashes and should normally only be readable by privileged users.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Creating Groups
+
+Create a group
+sudo groupadd group_name
+
+Example:
+sudo groupadd developers
+
+Check the group:
+getent group developers
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Managing Groups
+
+Add user to a group
+sudo usermod -aG group_name username
+
+Example:
+sudo usermod -aG developers madhav
+Important
+
+Always use:
+-aG
+
+when adding a secondary group.
+-a = append
+-G = supplementary/secondary groups
+
+Without -a, you can accidentally replace the user's existing secondary groups.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. Check User's Groups
+groups madhav
+or:
+id madhav
+
+Example:
+uid=1001(madhav) gid=1001(madhav) groups=1001(madhav),1002(developers)
+
+Here:
+madhav       → Primary group
+developers   → Secondary group
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. Primary Group
+
+Every Linux user has a primary group.
+
+When a user is created with:
+sudo useradd -m madhav
+
+Linux commonly creates a group with the same name:
+User:
+madhav
+
+Primary Group:
+madhav
+
+Check:
+id madhav
+
+Example:
+uid=1001(madhav)
+gid=1001(madhav)
+groups=1001(madhav)
+
+The gid shown immediately after the username is the primary group.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. Create a Primary Group
+
+Create a group:
+sudo groupadd cybersecurity
+
+Set it as Madhav's primary group:
+sudo usermod -g cybersecurity madhav
+
+Check:
+id madhav
+
+Example:
+uid=1001(madhav)
+gid=1002(cybersecurity)
+groups=1002(cybersecurity)
+
+Now:
+Primary group = cybersecurity
+Important
+-g changes the primary group.
+sudo usermod -g group_name username
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+10. Secondary Groups
+
+A user can belong to multiple secondary groups.
+
+Create groups:
+sudo groupadd developers
+sudo groupadd security
+sudo groupadd analysts
+
+Add Madhav to them:
+sudo usermod -aG developers madhav
+sudo usermod -aG security madhav
+sudo usermod -aG analysts madhav
+
+Check:
+id madhav
+
+Example:
+uid=1001(madhav)
+gid=1002(cybersecurity)
+groups=1002(cybersecurity),1003(developers),1004(security),1005(analysts)
+
+Therefore:
+Primary Group:
+cybersecurity
+
+Secondary Groups:
+developers
+security
+analysts
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+11. Remove User from a Secondary Group
+
+Using gpasswd:
+sudo gpasswd -d madhav developers
+
+Check:
+groups madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+12. Change a User's Primary Group
+sudo usermod -g new_group username
+
+Example:
+sudo usermod -g security madhav
+
+Verify:
+id madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+13. Delete a Group
+sudo groupdel group_name
+
+Example:
+sudo groupdel developers
+
+A group generally cannot be deleted if it is currently the primary group of a user. Change the user's primary group first.
