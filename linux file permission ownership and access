@@ -1,0 +1,383 @@
+-------------------------Linux File Permissions, Ownership & Access------------------------------------------------------------------------------------------------
+
+# Linux uses permissions and ownership to control who can access files and directories.
+
+1. File Ownership
+
+Every file and directory has:
+Owner
+Group
+Permissions
+
+Check them using:
+ls -l
+
+Example:
+-rwxr-xr-- 1 madhav developers 1234 Aug 25 script.sh
+
+Breakdown:
+-rwxr-xr--
+│││ │││ │││
+│││ │││ ││└── Others permissions
+│││ │││ └──── Group permissions
+│││ └──────── Owner permissions
+│└────────── File type
+└─────────── Permission information
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. File Types
+
+The first character of ls -l represents the file type.
+-    Regular file
+d    Directory
+l    Symbolic link
+c    Character device
+b    Block device
+
+Example:
+-rw-r--r--
+- means it is a regular file.
+
+Example:
+drwxr-xr-x
+d means it is a directory.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Permission Types
+
+Linux has three basic permissions:
+
+r = Read
+w = Write
+x = Execute
+
+These permissions apply to:
+Owner
+Group
+Others
+
+Example:
+-rwxr-xr--
+
+Break it down:
+Owner   → rwx
+Group   → r-x
+Others  → r--
+
+Meaning:
+Owner  → Read + Write + Execute
+Group  → Read + Execute
+Others → Read only
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. Permission Values
+
+Each permission has a numeric value:
+r = 4
+w = 2
+x = 1
+
+Add them together:
+rwx = 4 + 2 + 1 = 7
+rw- = 4 + 2     = 6
+r-x = 4 + 1     = 5
+r-- = 4
+-w- = 2
+--x = 1
+--- = 0
+
+Common permissions:
+777 → rwxrwxrwx
+755 → rwxr-xr-x
+700 → rwx------
+644 → rw-r--r--
+600 → rw-------
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Changing Permissions with chmod
+
+chmod = Change Mode
+Symbolic Method
+
+Give the owner execute permission:
+chmod u+x script.sh
+
+Give the group write permission:
+chmod g+w file.txt
+
+Give others read permission:
+chmod o+r file.txt
+
+Remove write permission from others:
+chmod o-w file.txt
+
+Remove execute permission from everyone:
+chmod a-x script.sh
+
+Where:
+u = user/owner
+g = group
+o = others
+a = all
+6. Numeric chmod
+
+Set:
+Owner = rwx
+Group = r-x
+Others = r-x
+
+Use:
+chmod 755 script.sh
+
+Set:
+Owner = rw-
+Group = r--
+Others = r--
+
+Use:
+chmod 644 file.txt
+
+Private file:
+chmod 600 secret.txt
+
+Private directory:
+chmod 700 private/
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. Recursive Permissions
+
+To change permissions for a directory and its contents:
+chmod -R 755 directory/
+Be careful with -R. Applying incorrect permissions recursively can break system files or expose sensitive information.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. Changing Ownership with chown
+
+chown = Change Owner
+
+Check ownership:
+ls -l file.txt
+
+Change owner:
+sudo chown madhav file.txt
+
+Change owner and group:
+sudo chown madhav:developers file.txt
+
+Change ownership recursively:
+sudo chown -R madhav:developers project/
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. Changing Group Ownership with chgrp
+
+chgrp = Change Group
+sudo chgrp developers file.txt
+
+Check:
+ls -l file.txt
+
+Example:
+-rw-r--r-- 1 madhav developers 1234 file.txt
+
+Here:
+Owner → madhav
+Group → developers
+10. Access Control Concept
+
+When a user accesses a file, Linux checks:
+
+             File
+               |
+        +------+------+
+        |             |
+      Owner          Group
+        |             |
+        +------+------+
+               |
+             Others
+
+Example:
+-rwxr-x---
+
+Means:
+Owner  → rwx
+Group  → r-x
+Others → ---
+
+So:
+Owner  → Full access
+Group  → Read + Execute
+Others → No access
+11. Directory Permissions
+
+Directory permissions work slightly differently.
+Read (r)
+Allows you to list the directory contents.
+
+ls directory/
+Write (w)
+Allows you to create, delete, or rename files inside the directory.
+
+Execute (x)
+Allows you to enter/traverse the directory.
+
+Example:
+cd directory/
+
+A common secure directory permission is:
+chmod 700 private/
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+12. Special Permissions
+
+Linux has three important special permissions:
+SUID
+SGID
+Sticky Bit
+They add special behavior to files and directories.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+13. SUID
+
+SUID = Set User ID
+SUID is mainly used on executable files.
+When an executable has SUID, it runs with the permissions of the file owner, rather than the user who executes it.
+
+Example:
+ls -l /usr/bin/passwd
+
+You may see:
+-rwsr-xr-x
+
+Notice:
+rws
+The s in the owner's execute position indicates SUID.
+
+Set SUID
+Numeric:
+chmod 4755 program
+
+Symbolic:
+chmod u+s program
+
+Remove SUID
+chmod u-s program
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+14. SGID
+
+SGID = Set Group ID
+On executable files, SGID causes the program to run with the permissions of the file's group.
+On directories, SGID has an especially useful behavior:
+
+New files created inside the directory inherit the directory's group.
+
+Set SGID:
+chmod g+s shared/
+or:
+chmod 2775 shared/
+
+Example:
+drwxrwsr-x
+
+The s in the group's execute position indicates SGID.
+Remove SGID:
+chmod g-s shared/
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+15. Sticky Bit
+
+The sticky bit is mainly used on shared directories.
+The classic example is:
+/tmp
+
+Check:
+ls -ld /tmp
+
+You may see:
+drwxrwxrwt
+
+The t at the end represents the sticky bit.
+With the sticky bit, users can generally delete/rename only files they own within the shared directory, even when the directory is writable by multiple users.
+
+Set sticky bit
+chmod +t shared/
+or:
+chmod 1777 shared/
+
+Remove sticky bit
+chmod -t shared/
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+16. Special Permission Numeric Values
+SUID       = 4
+SGID       = 2
+Sticky Bit = 1
+
+Examples:
+4755 → SUID
+2755 → SGID
+1777 → Sticky Bit
+
+The first digit represents the special permission.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+17. Check Special Permissions
+
+Use:
+ls -l
+
+Examples:
+SUID
+-rwsr-xr-x
+
+SGID
+-rwxr-sr-x
+
+Sticky Bit
+drwxrwxrwt
+
+Remember:
+SUID       → s in OWNER execute position
+SGID       → s in GROUP execute position
+Sticky Bit → t in OTHERS execute position
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+18. Complete Example
+
+Create a file:
+touch test.txt
+
+Check:
+ls -l test.txt
+
+Change owner:
+sudo chown madhav test.txt
+
+Change group:
+sudo chgrp developers test.txt
+
+Set permissions:
+chmod 640 test.txt
+
+Result:
+-rw-r----- 1 madhav developers test.txt
+
+Meaning:
+Owner  → rw- → Read + Write
+Group  → r-- → Read
+Others → --- → No access
