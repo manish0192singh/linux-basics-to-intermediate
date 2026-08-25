@@ -1,0 +1,312 @@
+----------------------------------------Linux User Authentication and Sudo Permissions------------------------------------------------------------------------------
+
+1. User Authentication
+Authentication means verifying that a user is who they claim to be.
+
+In Linux, authentication commonly involves:
+Username
+   ↓
+Password
+   ↓
+Authentication system
+   ↓
+Access granted / denied
+
+Example:
+su - madhav
+Linux asks for Madhav's password and authenticates the user.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Important Authentication Files
+
+Linux stores user account information mainly in:
+/etc/passwd
+/etc/shadow
+/etc/group
+/etc/passwd
+
+Contains basic information about user accounts.
+
+View it:
+cat /etc/passwd
+
+Example:
+madhav:x:1001:1001:Madhav:/home/madhav:/bin/bash
+
+The fields represent:
+Username
+Password placeholder
+UID
+GID
+User information
+Home directory
+Login shell
+
+The x means the password information is stored in /etc/shadow.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. /etc/shadow
+
+Contains password hashes and password-related information.
+
+View it:
+sudo cat /etc/shadow
+
+A normal user generally cannot read this file.
+
+Check its permissions:
+ls -l /etc/shadow
+
+Typical permissions are restrictive:
+-rw-r-----
+
+Only privileged users should be able to access password hashes.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. Checking User Information
+
+Current user:
+whoami
+
+User ID and groups:
+id
+
+For a specific user:
+id madhav
+
+Check whether a user exists:
+getent passwd madhav
+
+Check groups:
+groups madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Password Management
+
+Set/change a user's password:
+sudo passwd madhav
+
+Change your own password:
+passwd
+
+Lock an account:
+sudo passwd -l madhav
+
+Unlock an account:
+sudo passwd -u madhav
+
+Check password/account status:
+sudo passwd -S madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. User Login Shell
+
+Check the user's shell:
+getent passwd madhav
+
+Example:
+madhav:x:1001:1001::/home/madhav:/bin/bash
+
+The last field is the login shell:
+/bin/bash
+
+Change the shell:
+sudo usermod -s /bin/bash madhav
+
+To prevent interactive login, a common shell is:
+/usr/sbin/nologin
+
+Example:
+sudo usermod -s /usr/sbin/nologin madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. What is sudo?
+
+sudo means Superuser Do.
+It allows an authorized user to execute commands with elevated privileges.
+
+Example:
+sudo apt update
+
+Without sudo, a normal user may not have permission to perform administrative operations.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. Check Whether You Have Sudo Access
+
+Run:
+sudo -l
+
+This displays the commands the current user is allowed to run with sudo.
+
+You can also check your groups:
+
+groups
+On many Debian-based systems, administrative access is commonly granted through the sudo group.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. Add a User to the Sudo Group
+
+For example:
+sudo usermod -aG sudo madhav
+
+Check:
+groups madhav
+
+You may see:
+madhav sudo
+
+Madhav may need to log out and log back in before the new group membership is reflected in a new session.
+
+Then test:
+su - madhav
+sudo whoami
+
+Expected:
+root
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+10. Sudo Configuration
+
+The main configuration file is:
+/etc/sudoers
+
+Do not normally edit it directly with nano or another editor.
+
+Use:
+sudo visudo
+
+visudo checks the syntax before saving, helping prevent a broken sudo configuration.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+11. Sudoers Format
+
+A basic rule looks like:
+user host=(run-as-user) command
+
+Example:
+madhav ALL=(ALL:ALL) ALL
+
+Meaning Madhav can run commands through sudo as authorized by this rule.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+12. Giving Sudo Access to a Group
+
+Instead of giving permissions individually, Linux commonly uses groups.
+
+Example:
+%sudo ALL=(ALL:ALL) ALL
+
+The % means the entry refers to a group.
+
+Therefore:
+
+%sudo
+
+means the sudo group.
+
+A user added to that group can receive the permissions defined by the group rule.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+13. Allowing a Specific Command
+
+You can give a user permission to run only a specific command.
+
+Example:
+madhav ALL=(root) /usr/bin/systemctl restart apache2
+
+This is more restrictive than:
+madhav ALL=(ALL:ALL) ALL
+
+The principle is:
+Give users only the privileges they actually need.
+This is called the principle of least privilege.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+14. Running a Command as Another User
+
+Run as root:
+sudo command
+
+Run a shell as root:
+sudo -i
+
+Check:
+whoami
+
+Output:
+root
+
+Run a command as another user:
+sudo -u madhav whoami
+
+Output:
+madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+15. su vs sudo
+su
+
+Switch user:
+su - madhav
+
+Switch to root:
+su -
+
+sudo
+Run a specific command with elevated privileges:
+
+sudo command
+Main difference:
+
+su
+ ↓
+Switch to another user
+
+sudo
+ ↓
+Run a command with elevated privileges
+
+For administration, sudo is generally preferred because it can provide more controlled and auditable privilege escalation.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+16. Sudo Authentication
+
+When you run:
+sudo apt update
+
+Linux may ask for your own user's password, depending on the sudo configuration.
+
+Example:
+[sudo] password for madhav:
+
+It is not necessarily asking for the root password.
+After successful authentication, sudo executes the command according to the user's sudo permissions.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+17. Check Sudo Logs
+
+Sudo activity can be useful for security monitoring.
+On many Debian-based systems, authentication-related events can be viewed with:
+
+sudo journalctl _COMM=sudo
+
+You can also search authentication logs:
+sudo grep sudo /var/log/auth.log
+
+This is particularly useful for SOC Analyst work because sudo activity can show privilege escalation attempts.
