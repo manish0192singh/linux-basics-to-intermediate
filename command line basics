@@ -1,0 +1,406 @@
+----------------------------------------Command Line Basics--------------------------------------------------------------------------------------------------------
+
+The command line allows you to interact with Linux using commands instead of a graphical interface.
+
+Basic syntax:
+command [options] [arguments]
+
+Example:
+ls -l /home
+ls       → command
+-l       → option
+/home    → argument
+Get help
+man command
+
+Example:
+man ls
+
+Short help:
+command --help
+
+Example:
+ls --help
+Clear terminal
+clear
+
+or:
+
+Ctrl + L
+Show current user
+whoami
+Show command location
+which command
+
+Example:
+which python
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. System Information Commands
+
+Show system information
+uname -a
+
+Show Linux distribution information
+cat /etc/os-release
+
+Show hostname
+hostname
+
+Show hostname and system information
+hostnamectl
+
+Show CPU information
+lscpu
+
+Show memory usage
+free -h
+
+Show disk information
+lsblk
+
+Show disk space
+df -h
+
+Show running processes
+ps
+
+More detailed:
+ps aux
+
+Show system resource usage
+top
+
+If installed:
+htop
+
+Show current logged-in users
+who
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Navigation Commands
+
+Show current directory
+pwd
+
+pwd = Print Working Directory
+
+Example:
+/home/manish
+List files
+ls
+
+Detailed listing:
+ls -l
+
+Show hidden files:
+ls -a
+
+Detailed + hidden:
+ls -la
+
+Human-readable file sizes:
+ls -lh
+
+Change directory
+cd directory
+
+Example:
+cd /home
+Go to home directory:
+
+cd ~
+or simply:
+cd
+
+Go to parent directory:
+cd ..
+
+Go to previous directory:
+cd -
+
+Go to root directory:
+cd /
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. File and Directory Management
+
+Create a directory
+mkdir directory_name
+
+Example:
+mkdir test
+
+Create nested directories:
+mkdir -p project/src/code
+
+Create an empty file
+touch file.txt
+
+Copy files
+cp source.txt destination.txt
+
+Copy a directory:
+cp -r source_directory destination_directory
+
+Move a file
+mv file.txt /home/user/
+
+Rename a file
+mv old.txt new.txt
+
+Rename a directory
+mv old_directory new_directory
+
+Delete a file
+rm file.txt
+
+Delete an empty directory
+rmdir directory_name
+
+Delete a directory and its contents
+rm -r directory_name
+
+Force deletion:
+rm -rf directory_name
+⚠️ Be extremely careful with rm -rf. Deleted files may not be recoverable.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Key Operators
+Linux uses operators to combine and control commands.
+
+> Redirect output
+ls > files.txt
+
+Creates/overwrites files.txt.
+
+>> Append output
+ls >> files.txt
+
+Adds output to the end of the file.
+< Input redirection
+command < file.txt
+
+Uses the file as input.
+| Pipe
+
+Sends the output of one command to another command.
+ls -l | grep ".txt"
+
+Example:
+ls -l
+  ↓
+grep ".txt"
+&&
+
+Run the second command only if the first succeeds.
+mkdir test && cd test
+||
+
+Run the second command if the first command fails.
+cd test || mkdir test
+;
+
+Run commands regardless of whether the previous command succeeds.
+
+pwd; ls; whoami
+&
+
+Run a command in the background.
+command &
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Viewing and Displaying Files
+
+Display entire file
+cat file.txt
+
+Display file with line numbers
+cat -n file.txt
+
+View the beginning of a file
+head file.txt
+
+Specify number of lines:
+head -n 20 file.txt
+
+View the end of a file
+tail file.txt
+
+Specify number of lines:
+tail -n 20 file.txt
+
+Monitor a file in real time
+tail -f /var/log/syslog
+
+This is particularly useful for monitoring logs.
+
+Scroll through a file
+less file.txt
+or:
+more file.txt
+
+In less:
+
+↑ / ↓       → Move
+Space       → Next page
+b           → Previous page
+q           → Quit
+/word       → Search
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. Introduction to Text Editors
+
+Linux commonly provides terminal-based text editors.
+Nano
+
+Open/create a file:
+nano file.txt
+
+Useful shortcuts:
+Ctrl + O → Save
+Ctrl + X → Exit
+Ctrl + W → Search
+Ctrl + K → Cut line
+Ctrl + U → Paste
+Vim
+
+Open a file:
+vim file.txt
+
+Basic Vim modes:
+Normal Mode
+     ↓
+Press i
+     ↓
+Insert Mode
+     ↓
+Press Esc
+     ↓
+Normal Mode
+
+Save and exit:
+:wq
+
+Exit without saving:
+:q!
+
+Save:
+:w
+
+For beginners, Nano is easier to start with, while knowing basic Vim is useful because it is commonly available on Linux servers.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. File Manipulation Commands
+
+Create a file
+touch file.txt
+
+Copy
+cp file.txt backup.txt
+
+Move
+mv file.txt /tmp/
+
+Rename
+mv old.txt new.txt
+
+Delete
+rm file.txt
+
+Change permissions
+chmod 644 file.txt
+
+Change ownership
+sudo chown user:user file.txt
+
+Change group
+sudo chgrp group file.txt
+
+Create a symbolic link
+ln -s /path/to/original /path/to/link
+
+Example:
+ln -s /var/log/syslog syslog_link
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. Searching Commands
+
+Find files by name
+find /path -name "filename"
+
+Example:
+find /home -name "test.txt"
+
+Case-insensitive:
+find /home -iname "test.txt"
+
+Find directories
+find /home -type d -name "Documents"
+
+Find files
+find /home -type f -name "*.txt"
+
+Search inside files with grep
+grep "word" file.txt
+
+Example:
+grep "error" logfile.txt
+
+Case-insensitive:
+grep -i "error" logfile.txt
+
+Show line numbers:
+grep -n "error" logfile.txt
+
+Search recursively:
+grep -r "error" /var/log/
+
+Combine find and grep
+find /var/log -type f -name "*.log" -exec grep -i "error" {} \;
+This searches .log files for error.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+10. Useful Text Processing Commands
+
+Count lines, words and characters
+wc file.txt
+
+Only lines:
+wc -l file.txt
+
+Only words:
+wc -w file.txt
+
+Only characters:
+wc -c file.txt
+
+Sort output
+sort file.txt
+
+Reverse order:
+sort -r file.txt
+
+Remove duplicate consecutive lines
+uniq file.txt
+
+Count duplicates:
+uniq -c file.txt
+
+Display selected columns
+cut -d ":" -f 1 /etc/passwd
+
+Search command history
+history
+
+Search history:
+history | grep ssh
