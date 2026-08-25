@@ -1,0 +1,306 @@
+--------------------------------------------Linux_Disk_Managing_partition_and_file_system--------------------------------------------------------------------------
+
+1. Basic Concepts
+
+# Physical / Virtual Disk
+        |
+        +-- Partition 1
+        |      |
+        |      +-- Filesystem (ext4)
+        |
+        +-- Partition 2
+        |      |
+        |      +-- Filesystem (xfs)
+        |
+        +-- Partition 3
+               |
+               +-- Filesystem (swap)
+
+
+# Disk
+A disk is the complete storage device.
+
+Examples:
+          /dev/sda
+          /dev/sdb
+
+
+# Filesystem
+A filesystem determines how files and directories are stored on a partition.
+
+Common Linux filesystems:
+
+ext4    -> Common Linux filesystem
+xfs     -> Enterprise Linux filesystem
+btrfs   -> Advanced Linux filesystem
+swap    -> Used as virtual memory
+
+Other common filesystems:
+
+ntfs    -> Windows
+vfat    -> FAT/EFI partitions
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Disk and Partition Commands
+
+# List disks and partitions
+command-> lsblk
+
+Example:
+NAME   SIZE TYPE MOUNTPOINTS
+sda     50G disk
+├─sda1  20G part /
+└─sda2  30G part /home
+sdb     10G disk
+└─sdb1  10G part
+
+# Show filesystem information
+command-> lsblk -f
+
+Examples:
+NAME   FSTYPE UUID                                 MOUNTPOINTS
+sda
+├─sda1 ext4   1234-5678                            /
+├─sda2 ext4   9876-5432                            /home
+sdb
+└─sdb1 ext4   abcd-1234
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Check Disk Space
+Check filesystem disk usage
+
+command-> df -h
+df = Disk Filesystem
+-h = Human-readable format
+
+Examples:
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       20G   12G  7.0G  64% /
+
+Check directory size:
+command-> du -sh /home
+
+Check all directories inside /home:
+command-> du -sh /home/*
+du = Disk Usage
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. View Partition Information
+command-> sudo fdisk -l
+
+# Check a specific disk:
+command-> sudo fdisk -l /dev/sdb
+
+Another useful command:
+command-> sudo parted -l
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. MBR vs GPT
+
+There are two common partition table types:
+MBR
+
+MBR = Master Boot Record
+
+Characteristics:
+
+- Older partitioning system
+- Traditionally supports 4 primary partitions
+- Maximum disk size around 2 TB
+
+GPT
+GPT = GUID Partition Table
+
+Characteristics:
+
+- Modern partitioning system
+- Supports many partitions
+- Supports very large disks
+- Commonly used with UEFI
+
+###################################################################################################################################################################
+###################################################################################################################################################################
+
+QUESTION- IF YOU ARE USING VIRTUAL BOX FOR LINUX , ADD A NEW PARTITION FOR MADHAV USER ALLOT HIM 10GB OG SPACE AND CREATE THE MOUNT POINT
+ANSWER-
+
+1. Add the 10 GB disk in VirtualBox
+Shut down whatever OS your using i am using parrot os.
+
+Go to:
+VirtualBox
+→ Select Parrot OS
+→ Settings
+→ Storage
+→ Controller
+→ Add Hard Disk
+→ Create
+→ VDI
+→ Dynamically Allocated
+→ 10 GB
+
+Start Parrot OS.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Check the new disk
+
+Open a terminal:
+command-> lsblk
+
+You should see:
+
+NAME   SIZE TYPE MOUNTPOINTS
+sda   50.7G disk
+├─sda1   ... part /
+└─sda2   ... part
+sdb     10G disk
+
+Here:
+
+/dev/sda → Existing disk
+/dev/sdb → New 10 GB disk
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Open GParted
+
+Install it if necessary:
+command-
+sudo apt update
+sudo apt install gparted
+
+Open:
+sudo gparted
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. Select /dev/sdb
+
+In the top-right corner of GParted, you'll see something like:
+/dev/sda (50.70 GiB)
+
+Click it and select:
+/dev/sdb (10.00 GiB)
+⚠️ Make sure you select /dev/sdb, not /dev/sda, because /dev/sda contains your existing Parrot OS installation.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Create the partition
+
+# If /dev/sdb shows:
+unallocated
+
+Right-click the unallocated space:
+Right Click
+
+→ New
+Set:
+File system: ext4
+New size:    10240 MiB
+Label:       madhav
+
+Then click:
+Add
+
+You should now see:
+
+/dev/sdb
+└── /dev/sdb1
+    ext4
+    ~10 GB
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. Apply the changes
+Click the green checkmark ✓ at the top.
+
+GParted will ask you to confirm.
+Click:
+Apply
+Wait for it to finish.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. Verify from terminal
+Run:
+command-> lsblk -f
+
+You should see something similar to:
+NAME   FSTYPE FSVER LABEL  SIZE MOUNTPOINTS
+sda                         50G
+├─sda1 ext4                 ...  /
+└─sda2 swap                 ...
+sdb                         10G
+└─sdb1 ext4        madhav   10G
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. Create the user
+If madhav doesn't already exist:
+command-> sudo useradd -m madhav
+
+Set password:
+commnand-> sudo passwd madhav
+
+Check:
+command-> id madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+9. Create the mount point
+Because useradd -m normally creates /home/madhav, check first:
+
+command-> ls -ld /home/madhav
+If it exists, don't run mkdir again.
+If it doesn't exist:
+
+command-> sudo mkdir -p /home/madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+10. Mount the GParted-created partition
+
+Mount /dev/sdb1:
+command-> sudo mount /dev/sdb1 /home/madhav
+
+Check:
+command-> df -h /home/madhav
+
+You should see:
+
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb1       9.8G  ...  ...   ... /home/madhav
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+11. Give ownership to Madhav
+command-> sudo chown madhav:madhav /home/madhav
+
+#Set permissions:
+command-> sudo chmod 700 /home/madhav
+
+Check:
+command-> ls -ld /home/madhav
+
+Expected:
+output-> drwx------ ... madhav madhav ... /home/madhav
+
+|-----------------------------------------------------------------|
+|                     FINAL STURCTURE                             |
+| VirtualBox                                                      |
+| │                                                               |
+| ├── /dev/sda                                                    |
+| │   └── Existing Parrot OS                                      |
+| │                                                               |
+| └── /dev/sdb                                                    |
+|    │                                                            |
+|    └── /dev/sdb1                                                |
+|        │                                                        |
+|        ├── Filesystem: ext4                                     |
+|        ├── Size: ~10 GB                                         |
+|        ├── Created using: GParted                               |
+|        │                                                        |
+|        └── Mounted at:                                          |
+|            /home/madhav                                         |
+|-----------------------------------------------------------------|
