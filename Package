@@ -1,0 +1,175 @@
+-----------------------------------------------Linux Package Managers and Commands---------------------------------------------------------------------------------
+
+1. What is a Package Manager?
+A package manager is a tool used to install, update, remove, and manage software packages on Linux.
+
+It automatically handles:
+
+Installing software
+Removing software
+Updating software
+Installing dependencies
+Searching for packages
+Checking installed packages
+Package Manager
+      |
+      +-- Install
+      +-- Update
+      +-- Remove
+      +-- Search
+      +-- Upgrade
+      +-- Dependencies
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. APT - Debian / Ubuntu / Parrot / Kali
+
+APT is commonly used on Debian-based distributions.
+
+sudo apt update
+
+Updates the local package information.
+
+sudo apt upgrade
+
+Upgrades installed packages.
+
+Install a package
+sudo apt install package_name
+
+Example:
+
+sudo apt install nmap
+Remove a package
+sudo apt remove package_name
+
+Example:
+
+sudo apt remove nmap
+Remove package and configuration files
+
+Search for a package
+apt search package_name
+
+Example:
+
+apt search wireshark
+Show package information
+apt show package_name
+
+Example:
+
+apt show nmap
+List installed packages
+apt list --installed
+
+Check for upgradable packages
+apt list --upgradable
+
+Remove unused dependencies
+sudo apt autoremove
+Clean downloaded package files
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. DPKG - Debian Package Manager
+
+dpkg works directly with .deb packages.
+
+Install a .deb package
+sudo dpkg -i package.deb
+
+Remove a package
+sudo dpkg -r package_name
+
+List installed packages
+dpkg -l
+
+Check whether a package is installed
+dpkg -l | grep package_name
+
+Show package information
+dpkg -s package_name
+
+List files installed by a package
+dpkg -L package_name
+
+Example:
+
+dpkg -L nmap
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. YUM - Red Hat-Based Systems
+
+yum was traditionally used by RHEL/CentOS and related distributions.
+
+Install
+sudo yum install package_name
+
+Update
+sudo yum update
+
+Remove
+sudo yum remove package_name
+
+Search
+yum search package_name
+
+List installed packages
+yum list installed
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. DNF - Modern Red Hat Package Manager
+
+dnf is the modern package manager used by distributions such as Fedora and newer RHEL-based systems.
+
+Install
+sudo dnf install package_name
+
+Update
+sudo dnf update
+
+Remove
+sudo dnf remove package_name
+
+Search
+dnf search package_name
+
+Show package information
+dnf info package_name
+
+List installed packages
+dnf list installed
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. Pacman - Arch Linux
+
+pacman is the package manager used by Arch Linux and Arch-based distributions.
+
+Update package database and upgrade system
+sudo pacman -Syu
+
+Install
+sudo pacman -S package_name
+
+Example:
+sudo pacman -S nmap
+
+Remove
+sudo pacman -R package_name
+
+Search
+pacman -Ss package_name
+
+Search installed packages
+pacman -Qs package_name
+
+List installed packages
+pacman -Q
+
+Show package information
+pacman -Si package_name
+sudo apt clean
