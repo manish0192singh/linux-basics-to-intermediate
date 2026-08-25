@@ -173,3 +173,65 @@ pacman -Q
 Show package information
 pacman -Si package_name
 sudo apt clean
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Linux Package Management: Updating, Removing & Troubleshooting
+
+1. Updating Packages
+Before installing or upgrading software, update the package repository information:
+
+sudo apt update
+This does not upgrade your packages. It downloads the latest package information from configured repositories.
+
+Upgrade installed packages
+sudo apt upgrade
+
+Update and upgrade together
+sudo apt update && sudo apt upgrade
+
+Full upgrade
+sudo apt full-upgrade
+full-upgrade can install or remove packages if necessary to complete the upgrade.
+
+Check which packages can be upgraded
+apt list --upgradable
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Removing Packages
+Remove a package
+sudo apt remove package_name
+
+Example:
+sudo apt remove nmap
+This removes the software but generally keeps its configuration files.
+
+Completely remove a package
+sudo apt purge package_name
+
+Example:
+sudo apt purge nmap
+This removes the package and its system configuration files.
+
+Remove unused dependencies
+sudo apt autoremove
+Useful after removing software whose dependencies are no longer required.
+
+Clean downloaded package files
+sudo apt clean
+Removes downloaded .deb files from the local package cache.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Troubleshooting Package Problems
+Problem: Broken dependencies
+
+If you get dependency errors, try:
+
+sudo apt --fix-broken install
+
+Then:
+
+sudo apt update
+sudo apt upgrade
